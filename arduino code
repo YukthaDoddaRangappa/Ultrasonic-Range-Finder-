@@ -1,0 +1,62 @@
+#include <LiquidCrystal.h>
+
+// Define LCD pins: RS, E, D4, D5, D6, D7
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+
+// Ultrasonic sensor pins
+const int trigPin = 9;
+const int echoPin = 10;
+
+// Buzzer pin
+const int buzzerPin = 11;
+
+long duration;
+int distance;
+
+void setup() {
+  // Initialize LCD
+  lcd.begin(16, 2);
+  lcd.print("Ultrasonic Range");
+
+  // Setup pins
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  // Send 10µs pulse to trigger pin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Measure echo time
+  duration = pulseIn(echoPin, HIGH);
+
+  // Convert to distance (cm)
+  distance = duration * 0.034 / 2;
+
+  // Display on LCD
+  lcd.setCursor(0, 0);
+  lcd.print("Distance: ");
+  lcd.print(distance);
+  lcd.print(" cm   "); // spaces to clear old data
+
+  // Buzzer alert if too close
+  if (distance > 0 && distance < 20) { // threshold = 20 cm
+    digitalWrite(buzzerPin, HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print("Object TOO Close!");
+  } else {
+    digitalWrite(buzzerPin, LOW);
+    lcd.setCursor(0, 1);
+    lcd.print("Safe Distance    ");
+  }
+
+  delay(500); // update every 0.5 sec
+}
