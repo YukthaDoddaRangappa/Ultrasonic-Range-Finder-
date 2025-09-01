@@ -67,9 +67,6 @@ The LCD displays live distance readings.
 
 The buzzer turns on if the distance is below 20 cm (configurable).
 
-📷 Demo
-
-(Add images or GIFs of your setup and LCD display here)
 
 🚦 Future Improvements
 
